@@ -8,7 +8,7 @@ class InputDataGenerator(DataGenerator):
         X, Y, R = list(map(float, input("Enter X, Y, R by whitespace: ").split()))
         circles = list(map(lambda circle_data: self.__get_circle_data(circle_data),
                            input(
-                               "Enter x,y for every circle separated by ',', every circle data must be separated by whitespace: ")
+                               "Enter x,y,weight for every circle separated by ',', every circle data must be separated by whitespace: ")
                            .split()))
 
         global_data = GlobalData(X, Y, R, circles)

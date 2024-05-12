@@ -1,4 +1,5 @@
 import math
+from typing import List, Tuple
 
 from data_classes.entities.Circle import Circle
 from data_classes.entities.Line.Line import Line
@@ -12,7 +13,7 @@ class TwoCirclesLinesBuilder:
         self.circle2 = circle2
         self.r = r
 
-    def find_tangent_lines(self):
+    def find_tangent_lines(self) -> Tuple[AbstractLine, AbstractLine]:
         connective_line: AbstractLine = self.__find_connective_line()
         if isinstance(connective_line, VerticalLine):
             return self.__find_vertical_tangent_lines(connective_line)
@@ -28,12 +29,12 @@ class TwoCirclesLinesBuilder:
         b = (y1 * (x2 - x1) - x1 * (y2 - y1)) / (x2 - x1)
         return Line(k, b)
 
-    def __find_vertical_tangent_lines(self, connective_line: VerticalLine):
+    def __find_vertical_tangent_lines(self, connective_line: VerticalLine) -> Tuple[VerticalLine, VerticalLine]:
         line1 = VerticalLine(connective_line.x + self.r)
         line2 = VerticalLine(connective_line.x - self.r)
         return line1, line2
 
-    def __find_tangent_lines(self, connective_line: Line):
+    def __find_tangent_lines(self, connective_line: Line) -> Tuple[Line, Line]:
         shift = self.r * math.sqrt(connective_line.k**2 + 1)
         line1 = Line(connective_line.k, connective_line.b + shift)
         line2 = Line(connective_line.k, connective_line.b - shift)

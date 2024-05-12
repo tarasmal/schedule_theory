@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from data_classes.entities.Line import Line
 from data_classes.entities.GlobalData import GlobalData
+from data_classes.entities.Line.AbstractLine import AbstractLine
 
 
 class Solver(ABC):
@@ -10,5 +10,5 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def solve(self) -> Line:
+    def solve(self) -> AbstractLine:
         pass
