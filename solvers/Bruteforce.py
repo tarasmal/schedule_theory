@@ -3,7 +3,6 @@ from typing import List, Tuple
 from data_classes.entities.Circle import Circle
 from data_classes.entities.Line.AbstractLine import AbstractLine
 from solvers.Solver import Solver
-from data_classes.entities.Line import Line
 from data_classes.entities.GlobalData import GlobalData
 from util.TwoCirclesLinesBuilder import TwoCirclesLinesBuilder
 
@@ -31,8 +30,7 @@ class Bruteforce(Solver):
             if current_sum > max_sum:
                 max_sum = current_sum
                 best_line = current_line
-        print(max_sum)
-        return best_line
+        return best_line #5,3,5 5,7,10 12,3,1 25,-5,20 5,-5,100 48,67,2000
 
     def __find_sum_for_sector(self, circle1: Circle, circle2: Circle, r: float, other_circles: List[Circle]) -> Tuple[AbstractLine, float]:
         sum1 = circle1.weight + circle2.weight

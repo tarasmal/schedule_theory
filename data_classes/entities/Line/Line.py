@@ -20,19 +20,19 @@ class Line(AbstractLine):
     def __solve_line_circle_equations_system(self, circle: Circle, r: float) -> List:
         x, y = circle.get()
         A = 1 + self.k ** 2
-        B = 2 * self.k * (x - self.b) - 2 * x
-        C = self.b ** 2 + (x - self.b) ** 2 - r ** 2
+        B = -2 * x + 2 * self.k * (self.b - y)
+        C = x ** 2 + (self.b - y) ** 2 - r ** 2
         discriminant = B ** 2 - 4 * A * C
         result = []
         if discriminant > 0:
             x1 = (-B + np.sqrt(discriminant)) / (2 * A)
             x2 = (-B - np.sqrt(discriminant)) / (2 * A)
-            y1 = self.k * x1 + x
-            y2 = self.k * x2 + x
+            y1 = self.k * x1 + self.b
+            y2 = self.k * x2 + self.b
             result = [(x1, y1), (x2, y2)]
         elif discriminant == 0:
             x = -B / (2 * A)
-            y = self.k * x + x
+            y = self.k * x + self.b
             result = [(x, y)]
         return result
 
