@@ -19,7 +19,7 @@ class Bruteforce(Solver):
     def global_data(self, value):
         self._global_data = value
 
-    def solve(self) -> AbstractLine:
+    def solve(self) -> Tuple[AbstractLine, float]:
         X, Y, R, circles = self.global_data.get()
         circles.sort(key=lambda c: c.weight, reverse=True)
         max_sum = 0
@@ -30,7 +30,7 @@ class Bruteforce(Solver):
             if current_sum > max_sum:
                 max_sum = current_sum
                 best_line = current_line
-        return best_line #5,3,5 5,7,10 12,3,1 25,-5,20 5,-5,100 48,67,2000
+        return best_line, max_sum #5,3,5 5,7,10 12,3,1 25,-5,20 5,-5,100 48,67,2000
 
     def __find_sum_for_sector(self, circle1: Circle, circle2: Circle, r: float, other_circles: List[Circle]) -> Tuple[AbstractLine, float]:
         sum1 = circle1.weight + circle2.weight

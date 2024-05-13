@@ -7,7 +7,7 @@ generator: DataGenerator = InputDataGenerator()
 global_data: GlobalData = generator.get_data()
 solver = Bruteforce(global_data)
 best_line = solver.solve()
-print(best_line)
+print(best_line[0], '\n', best_line[1])
 
 
 
