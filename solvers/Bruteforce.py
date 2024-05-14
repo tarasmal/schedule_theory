@@ -23,7 +23,7 @@ class Bruteforce(Solver):
         X, Y, R, circles = self.global_data.get()
         circles.sort(key=lambda c: c.weight, reverse=True)
         max_sum = 0
-        best_line: AbstractLine = None
+        best_line = None
         n = len(circles)
         for i in range(n - 1):
             current_line, current_sum = self.__find_sum_for_sector(circles[i], circles[i + 1], R, circles[i + 2:])
