@@ -14,8 +14,8 @@ class RandomGenerator(DataGenerator):
         return GlobalData(X, Y, R, circles)
 
     def __generateXY(self) -> Tuple[float, float]:
-        x_range = float(input("Enter range of x value: "))
-        y_range = float(input("Enter range of y value: "))
+        x_range = float(input("Enter range of X value: "))
+        y_range = float(input("Enter range of Y value: "))
         return uniform(0, x_range), uniform(0, y_range)
 
     def __generateR(self) -> float:
@@ -26,7 +26,7 @@ class RandomGenerator(DataGenerator):
         def generate_circle() -> Circle:
             x = uniform(0, X)
             y = uniform(0, Y)
-            weight = uniform(weight_range[0], weight_range[1])
+            weight = round(uniform(weight_range[0], weight_range[1]), 2)
             return Circle(x, y, weight)
 
         n = int(input("Enter number of circles: "))

@@ -30,9 +30,11 @@ class Bruteforce(Solver):
             if current_sum > max_sum:
                 max_sum = current_sum
                 best_line = current_line
-        return best_line, max_sum #5,3,5 5,7,10 12,23,1 25,5,20 3,5,100 48,67,2000
 
-    def __find_sum_for_sector(self, circle1: Circle, circle2: Circle, r: float, other_circles: List[Circle]) -> Tuple[AbstractLine, float]:
+        return best_line, max_sum  # 5,3,5 5,7,10 12,23,1 25,5,20 3,5,100 48,67,2000
+
+    def __find_sum_for_sector(self, circle1: Circle, circle2: Circle, r: float, other_circles: List[Circle]) -> Tuple[
+        AbstractLine, float]:
         sum1 = circle1.weight + circle2.weight
         sum2 = circle1.weight + circle2.weight
         line_builder = TwoCirclesLinesBuilder(circle1, circle2, r)
