@@ -3,26 +3,39 @@ from typing import List
 import matplotlib
 import numpy as np
 from matplotlib import pyplot as plt
+
+from data_classes.Result.Result import Result
 from data_classes.entities.Line.Line import Line
 from data_classes.entities.Line.PlottedLine import PlottedLine
 from data_classes.entities.Line.VerticalLine import VerticalLine
 
-matplotlib.use('TkAgg')
+matplotlib.use('MACOSX')
 
 
 class Visualizer:
-    def __init__(self, circles, lines: List[PlottedLine], xlim, ylim, R):
+    def __init__(self, circles, result: List[Result], xlim, ylim, R):
         self.circles = circles
-        self.lines = lines
         self.xlim = (0, xlim)
         self.ylim = (0, ylim)
         self.R = R
+        self.lines = self.__to_plotted_lines(result)
         self.fig, self.ax = plt.subplots(figsize=(6, 8))
         self.ax.set_xlim(self.xlim)
         self.ax.set_ylim(self.ylim)
         self.ax.set_aspect('equal')
         self.ax.grid(True)
         self.draw()
+
+    def __to_plotted_lines(self, results: List[Result]) -> List[PlottedLine]:
+        colors = ["red", "green", "blue"]
+        plotted_lines = []
+        for index in range(len(results)):
+            line, label = results[index].get_line_and_label()
+            plotted_line = PlottedLine(line, label, colors[index])
+            plotted_lines.append(plotted_line)
+        return plotted_lines
+
+
 
     def draw(self):
         for circle in self.circles:

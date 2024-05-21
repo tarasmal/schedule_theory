@@ -1,5 +1,6 @@
 from typing import Tuple
 
+from data_classes.Result.Result import Result
 from data_classes.entities.GlobalData import GlobalData
 from data_classes.entities.Line.AbstractLine import AbstractLine
 from data_classes.entities.Line.Line import Line
@@ -7,12 +8,16 @@ from data_classes.entities.Line.VerticalLine import VerticalLine
 from solvers.Solver import Solver
 from math import *
 
+from solvers.timer import timer
+
 
 class FloatingLine(Solver):
-    def __init__(self, global_data: GlobalData):
+    def __init__(self, global_data: GlobalData, delta=0.1):
+        self.name = "Floating line"
         self._global_data = global_data
         self.angle = 0
-        self.delta = 0.001
+        self.delta = delta
+        self.execution_time = 0
 
     @property
     def global_data(self) -> GlobalData:
@@ -22,7 +27,13 @@ class FloatingLine(Solver):
     def global_data(self, value):
         self._global_data = value
 
-    def solve(self) -> Tuple[AbstractLine, float]:
+    def solve(self) -> Result:
+        result = self.__solve()
+        result.execution_duration = self.execution_time
+        return result
+
+    @timer
+    def __solve(self) -> Result:
         X, Y, R, circles = self.global_data.get()
         max_sum = 0
         best_line = None
@@ -38,7 +49,7 @@ class FloatingLine(Solver):
             self.angle += self.delta
             line = self.__get_rotated_line(X, Y, self.angle)
 
-        return best_line, max_sum
+        return Result(best_line, max_sum, 0, "Floating line")
 
     def __get_rotated_line(self, X, Y, new_angle) -> AbstractLine:
         if 90 - self.delta <= new_angle <= 90 + self.delta:

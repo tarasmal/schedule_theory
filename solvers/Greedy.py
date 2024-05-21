@@ -1,20 +1,21 @@
 from typing import Tuple, List
 
-import numpy as np
 
-from data_classes.entities.Circle import Circle
+from data_classes.Result.Result import Result
 from data_classes.entities.GlobalData import GlobalData
 from data_classes.entities.Line.AbstractLine import AbstractLine
 from data_classes.entities.Line.Line import Line
 from data_classes.entities.Line.VerticalLine import VerticalLine
 from data_classes.entities.Rectangle import Rectangle
 from solvers.Solver import Solver
+from solvers.timer import timer
 
 
 class Greedy(Solver):
 
     def __init__(self, global_data: GlobalData):
-        self.global_data = global_data
+        self.name = "Greedy"
+        self._global_data = global_data
         self.R = global_data.R
         self.A = (0, 0)
         self.B = (0, 0)
@@ -22,6 +23,9 @@ class Greedy(Solver):
         self.current_rectangles = []
         self.rectangles_A = []
         self.rectangles_B = []
+        self.execution_time = 0
+        self.best_line = None
+        self.best_sum = 0
 
     @property
     def global_data(self) -> GlobalData:
@@ -41,22 +45,25 @@ class Greedy(Solver):
             return VerticalLine(x1)
         k = (y2 - y1) / (x2 - x1)
         b = (y1 * (x2 - x1) - x1 * (y2 - y1)) / (x2 - x1)
-
         return Line(k, b)
 
-    def solve(self) -> Tuple[AbstractLine, float]:
+    def solve(self) -> Result:
+        result = self.__solve()
+        result.execution_duration = self.execution_time
+        return result
+
+    @timer
+    def __solve(self) -> Result:
         X, Y, R, circles = self.global_data.get()
         init_coordinates = 0, 0, X, Y
         init_rectangle = Rectangle(*init_coordinates)
         self.current_rectangles = init_rectangle.split_rectangle()
         self.current_circles = circles
         rect1, rect2 = self.__get_two_largest_rectangles_by_sum(init_rectangle.split_rectangle())
-        self.__solve2(circles, rect1, rect2)
-        line = self.__build_line()
-        return line, 0
-        # return line, self.get_weight_of_line(line)
+        self.__recursive_solver(circles, rect1, rect2)
+        return Result(self.best_line, self.best_sum, 0, "Greedy")
 
-    def __solve2(self, circles, rect1: Rectangle, rect2: Rectangle) -> AbstractLine:
+    def __recursive_solver(self, circles, rect1: Rectangle, rect2: Rectangle):
         self.rectangles_A = rect1.split_rectangle()
         self.rectangles_B = rect2.split_rectangle()
         new_circles = []
@@ -78,27 +85,18 @@ class Greedy(Solver):
         rect2 = self.__get_largest_rectangle(self.rectangles_B)
         self.A = rect1.get_center_coordinates()
         self.B = rect2.get_center_coordinates()
+
+        current_line = self.__build_line()
+        current_sum = self.get_weight_of_line(current_line)
+        if current_sum > self.best_sum:
+            self.best_line = current_line
+            self.best_sum = current_sum
         if rect1.get_diagonal_length() > 2 * self.R:
-            self.__solve2(new_circles, rect1, rect2)
+
+            self.__recursive_solver(new_circles, rect1, rect2)
 
     def __get_largest_rectangle(self, rectangles: List[Rectangle]):
         return max(rectangles, key=lambda x: x.sum)
-
-    def __solve(self):
-        new_circles = []
-        for rectangle in self.current_rectangles:
-            for circle in self.current_circles:
-                if self.__check_circle_in_rectangle(circle.x, circle.y, self.R, *rectangle.get_attributes()):
-                    rectangle.sum += circle.weight
-                    new_circles.append(circle)
-        rect1, rect2 = self.__get_two_largest_rectangles_by_sum(self.current_rectangles)
-
-        self.A = rect1.get_center_coordinates()
-        self.B = rect2.get_center_coordinates()
-        if rect1.get_diagonal_length() > 2 * self.R:
-            self.current_rectangles = [*rect1.split_rectangle(), *rect2.split_rectangle()]
-            self.current_circles = new_circles
-            self.__solve()
 
     def __get_two_largest_rectangles_by_sum(self, rectangles: List[Rectangle]) -> Tuple[Rectangle, Rectangle]:
         sorted_rectangles = sorted(rectangles, key=lambda x: x.sum, reverse=True)
