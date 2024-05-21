@@ -27,9 +27,8 @@ class AverageRelativeErrorTest:
         self.n_range = [n for n in range(self.n_min, self.n_max + 1)]
 
     def test(self):
-        i = 0
         for n in self.n_range:
-            print(f'{100 * i / (self.n_max + 1 - self.n_min)}%')
+            print(f'{100 * n / (self.n_max + 1 - self.n_min)}%')
             for iteration in range(1, self.iterations + 1):
                 data = self.__get_data(n)
                 solver1 = FloatingLine(data)
@@ -40,7 +39,6 @@ class AverageRelativeErrorTest:
             for key in self.errors:
                 self.average_errors[key].append(self.errors[key])
             self.reset_errors()
-            i += 1
 
     def __get_data(self, n) -> GlobalData:
         generator = RandomGeneratorWithoutInput(n)

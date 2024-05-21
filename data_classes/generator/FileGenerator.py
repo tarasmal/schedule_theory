@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List
 
 from data_classes.entities.Circle import Circle
@@ -20,6 +21,8 @@ class FileGenerator(DataGenerator):
         return GlobalData(X, Y, R, circles)
 
     def __get_file_lines(self, filename="data4.txt") -> List[str]:
-        with open(f'../data/{filename}', 'r') as file:
+        current_dir = Path(__file__).parent
+        file_path = current_dir / '../../data' / filename
+        with open(file_path, 'r') as file:
             lines = file.readlines()
         return lines

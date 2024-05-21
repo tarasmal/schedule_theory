@@ -1,13 +1,14 @@
 from data_classes.generator.DataGenerator import DataGenerator
 from data_classes.entities.GlobalData import GlobalData
 from data_classes.generator.FileGenerator import FileGenerator
+from data_classes.generator.InputDataGenerator import InputDataGenerator
 from data_classes.generator.RandomGenerator import RandomGenerator
 from solvers.Bruteforce import Bruteforce
 from solvers.FloatingLine import FloatingLine
 from solvers.Greedy import Greedy
 from util.visualizer.Visualizer import Visualizer
 
-generator: DataGenerator = RandomGenerator()
+generator: DataGenerator = FileGenerator()
 global_data: GlobalData = generator.get_data()
 solver1 = FloatingLine(global_data)
 solver2 = Bruteforce(global_data)
