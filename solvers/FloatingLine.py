@@ -12,13 +12,17 @@ from solvers.timer import timer
 
 
 class FloatingLine(Solver):
-    def __init__(self, global_data: GlobalData, delta=0.1):
+    def __init__(self, global_data: GlobalData, delta=0.01, with_setting_of_delta=False):
         self.name = "Floating line"
         self._global_data = global_data
         self.angle = 0
         self.delta = delta
         self.execution_time = 0
+        if with_setting_of_delta:
+            self.__set_delta()
 
+    def __set_delta(self):
+        self.delta = float(input("(Floating line) Enter delta: "))
     @property
     def global_data(self) -> GlobalData:
         return self._global_data

@@ -20,8 +20,3 @@ class PlotDataForAverageErrorTest:
         plt.grid(True)
         plt.show()
 
-
-test = AverageRelativeErrorTest()
-test.test()
-plotter = PlotDataForAverageErrorTest(test.average_errors, test.n_range)
-plotter.plot()

@@ -47,9 +47,9 @@ class TaskParamsTest:
             "R": 3,
             "n": 1000
         }
-        min_val, max_val = tuple(map(int, input("Enter range of x separated by whitespace: ").split()))
+        min_val, max_val = tuple(map(int, input("Enter range of Y separated by whitespace: ").split()))
         data = GeneratorForParamsTest(constant_params, test_param='Y', test_param_value=0).get_data()
-        to_plot = self.__test("X", min_val, max_val, data)
+        to_plot = self.__test("Y", min_val, max_val, data)
         to_plot.plot()
 
     def test_r(self):
@@ -58,9 +58,9 @@ class TaskParamsTest:
             "Y": 1000,
             "n": 1000
         }
-        min_val, max_val = tuple(map(int, input("Enter range of x separated by whitespace: ").split()))
+        min_val, max_val = tuple(map(int, input("Enter range of R separated by whitespace: ").split()))
         data = GeneratorForParamsTest(constant_params, test_param='R', test_param_value=0).get_data()
-        to_plot = self.__test("X", min_val, max_val, data)
+        to_plot = self.__test("R", min_val, max_val, data)
         to_plot.plot()
 
     def test_n(self):
@@ -89,6 +89,3 @@ class TaskParamsTest:
         return PlotDataForParametersTests(solver.name, parameter_name, parameter_values, accuracy_values=target_function_value,
                                           execution_time_values=execution_duration)
 
-
-test = TaskParamsTest()
-test.test_r()

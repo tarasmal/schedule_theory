@@ -18,11 +18,15 @@ class FloatingLineTest:
     def test(self):
         execution_time_values = []
         target_func_values = []
+        i = 0
+        n = len(self.deltas)
         for delta in self.deltas:
+            print(f'{i}/{n}')
             solver = FloatingLine(self.data, delta=delta)
             result = solver.solve()
             execution_time_values.append(result.execution_duration)
             target_func_values.append(result.line_weight)
+            i += 1
         return execution_time_values, target_func_values
 
     def plot(self, execution_time_values: List[float], target_func_values: List[float]):

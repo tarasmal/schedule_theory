@@ -27,8 +27,9 @@ class AverageRelativeErrorTest:
         self.n_range = [n for n in range(self.n_min, self.n_max + 1)]
 
     def test(self):
+        i = 0
         for n in self.n_range:
-            print(f'{100 * n / (self.n_max + 1 - self.n_min)}%')
+            print(f'{100 * i / (self.n_max + 1 - self.n_min)}%')
             for iteration in range(1, self.iterations + 1):
                 data = self.__get_data(n)
                 solver1 = FloatingLine(data)
@@ -36,9 +37,11 @@ class AverageRelativeErrorTest:
                 solver3 = Greedy(data)
                 results = [solver1.solve(), solver2.solve(), solver3.solve()]
                 self.__get_average_error_on_iteration(results, iteration)
+
             for key in self.errors:
                 self.average_errors[key].append(self.errors[key])
             self.reset_errors()
+            i += 1
 
     def __get_data(self, n) -> GlobalData:
         generator = RandomGeneratorWithoutInput(n)
@@ -47,6 +50,7 @@ class AverageRelativeErrorTest:
     def __get_average_error_on_iteration(self, results: List[Result], iteration):
         max_result = max(results, key=lambda x: x.line_weight).line_weight
         for res in results:
+            print(res)
             line_weight = res.line_weight
             error = 1 - line_weight / max_result
             avg_error = (self.errors[res.solver_name] * (iteration - 1) + error) / iteration
@@ -56,6 +60,3 @@ class AverageRelativeErrorTest:
         self.errors["Bruteforce"] = 0
         self.errors["Floating line"] = 0
         self.errors["Greedy"] = 0
-
-# average_test = AverageRelativeErrorTest()
-# print(average_test.test())
