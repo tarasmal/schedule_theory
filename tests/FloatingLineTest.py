@@ -1,10 +1,14 @@
+from random import uniform
 from typing import List
 
 import numpy as np
 from matplotlib import pyplot as plt
 
+from data_classes.entities.Circle import Circle
 from data_classes.entities.GlobalData import GlobalData
 from data_classes.generator.FileGenerator import FileGenerator
+from data_classes.generator.RandomGenerator import RandomGenerator
+from data_classes.generator.RandomGeneratorWithoutInput import RandomGeneratorWithoutInput
 from solvers.FloatingLine import FloatingLine
 
 
@@ -13,19 +17,37 @@ class FloatingLineTest:
         min_val, max_val = map(float, input("Enter min and max value of delta separated by whitespace: ").split())
         k = float(input("Enter step k for delta: "))
         self.deltas = list(np.arange(min_val, max_val + k, k))
-        self.data = self.__get_data_from_file()
+
+    def __generate_circles(self, X: float, Y: float, num_circles: int) -> List[Circle]:
+        circles: List[Circle] = []
+        for _ in range(num_circles):
+            x = X
+            y = Y
+            weight = round(uniform(1, 100), 2)
+            circles.append(Circle(x, y, weight))
+        return circles
 
     def test(self):
         execution_time_values = []
         target_func_values = []
         i = 0
         n = len(self.deltas)
+        tasks_n = int(input("Enter number of tasks generated per delta: "))
+        dimension = int(input("Enter dimension of task: "))
+        X, Y = tuple(map(float, input("Enter X,Y separated by whitespace: ").split()))
+        R = int(input("Enter R of every circle: "))
         for delta in self.deltas:
+            tasks = [GlobalData(X, Y, R, self.__generate_circles(X, Y, dimension)) for _ in range(tasks_n)]
+            avg_exec_time = 0
+            avg_target_func_values = 0
+            for task in tasks:
+                solver = FloatingLine(task, delta=delta)
+                result = solver.solve()
+                avg_exec_time += result.execution_duration / tasks_n
+                avg_target_func_values += result.line_weight / tasks_n
             print(f'{i}/{n}')
-            solver = FloatingLine(self.data, delta=delta)
-            result = solver.solve()
-            execution_time_values.append(result.execution_duration)
-            target_func_values.append(result.line_weight)
+            execution_time_values.append(avg_exec_time)
+            target_func_values.append(avg_target_func_values)
             i += 1
         return execution_time_values, target_func_values
 
@@ -51,8 +73,3 @@ class FloatingLineTest:
     def __get_data_from_file(self) -> GlobalData:
         file_generator = FileGenerator()
         return file_generator.get_data()
-
-
-a = FloatingLineTest()
-execution_time_values, target_func_values = a.test()
-a.plot(execution_time_values, target_func_values)

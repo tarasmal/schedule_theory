@@ -8,6 +8,7 @@ from solvers.FloatingLine import FloatingLine
 from solvers.Greedy import Greedy
 from solvers.Solver import Solver
 from tests.AverageRelativeErrorTest import AverageRelativeErrorTest
+from tests.FloatingLineTest import FloatingLineTest
 from tests.TaskParamsTest import TaskParamsTest
 from util.visualizer.TestsVisualizer.PlotDataForAverageErrorTest import PlotDataForAverageErrorTest
 from util.visualizer.Visualizer import Visualizer
@@ -18,10 +19,10 @@ class Main:
         self.tests = TestsOptionsChooser()
 
     def menu(self):
-        options = {1: self.solve_by_one, 2: self.__solve_by_all, 3: TestsOptionsChooser.task_parameter_test, 4: TestsOptionsChooser.average_error_test}
+        options = {1: self.solve_by_one, 2: self.__solve_by_all, 3: TestsOptionsChooser.task_parameter_test, 4: TestsOptionsChooser.average_error_test, 5: TestsOptionsChooser.floting_line_test}
         option = -1
         while option != 0:
-            option = int(input("0 - Exit\n1 - solve by Bruteforce/FloatingLine/Greedy\n2 - solve with all algorithms\n3 - task parameter test\n4 - average_error_test\n"))
+            option = int(input("0 - Exit\n1 - solve by Bruteforce/FloatingLine/Greedy\n2 - solve with all algorithms\n3 - task parameter test\n4 - average_error_test\n5 - floating line test\n"))
             if option in range(1, len(options.keys()) + 1):
                 options[option]()
 
@@ -92,6 +93,19 @@ class TestsOptionsChooser:
                 test.test()
                 plotter = PlotDataForAverageErrorTest(test.average_errors, test.n_range)
                 plotter.plot()
+
+    @staticmethod
+    def floting_line_test():
+        print("Floating line error test")
+        option = None
+        while option != 0:
+            option = int(input("0 - exit\n1 - test: "))
+            if option != 0:
+                test = FloatingLineTest()
+                execution_time_values, target_func_values = test.test()
+                test.plot(execution_time_values, target_func_values)
+
+
 
 
 main = Main()
